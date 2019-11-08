@@ -1,15 +1,23 @@
 {% load rating_tags i18n %}
 
-  <meta itemprop="bestRating" content="5">
-  <meta itemprop="worstRating" content="1">
-  <meta itemprop="ratingCount" content="1">
+  <div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+      {% if vote_average %}
+          <meta itemprop="ratingValue" content="{{ vote_average }}">
+      {% else %}
+          <meta itemprop="ratingValue" content="5">
+      {% endif %}
+      <meta itemprop="bestRating" content="5">
+      <meta itemprop="worstRating" content="1">
+  </div>
+
   <meta itemprop="mainEntityOfPage" content="{{ object.get_absolute_url }}">
   <meta itemprop="url" content="{{ object.get_absolute_url }}">
 
   <form action="{% url 'update_rating' %}" id="js-rating-form" method="post">
     {% csrf_token %}
-    <div class="js-star-rating star-rating {% if disabled %}disabled{% endif %}"
-          data-init='{{ vote_average|floatformat:"0" }}'></div>
+    <ul class="js-star-rating star-rating {% if disabled %}disabled{% endif %}"
+          data-init='{{ vote_average|floatformat:"0" }}'>
+    </ul>
     <label for='id_object_id'></label>
       <input class="form-control" value='{{ object.id }}'
               id="id_object_id" name="object_id" type="hidden">
@@ -28,7 +36,7 @@
 
     {{ form.non_field_errors }}
 
-    {% if not vote_amount %}
+    <!-- {% if not vote_amount %}
       <p class='margTop20'>
         {% trans 'Nobody voted yet' %}
       </p>
@@ -39,5 +47,5 @@
       <p>
         {% trans 'Average mark' %}: <span itemprop="ratingValue">{{ vote_average|floatformat:"1" }}</span>
       </p>
-    {% endif %}
+    {% endif %} -->
   </form>
